@@ -1,0 +1,35 @@
+<form bindsubmit="formSubmit" bindreset="formReset">
+  <view class="section">
+    <view class="section-title">请问您工作在什么环境？</view>
+    <picker bindchange="bindPickerChange" value="{{index}}" range="{{environment}}" range-key="name" name="environment" mode="selector">
+      <view class="picker">
+        当前选择：{{environment[index].name}}
+      </view>
+    </picker>
+  </view>
+  <view class="section">
+    <view class="section-title">年龄</view>
+    <picker bindchange="bindAgeChange" value="{{indexAge}}" range="{{age}}" name="age" mode="selector">
+      <view class="picker">
+        当前选择：{{age[indexAge]}}
+      </view>
+    </picker>
+  </view>
+  <view class="section">
+    <view class="section-title">身高(cm)</view>
+    <picker bindchange="bindHeightChange" value="{{indexHeight}}" range="{{height}}" name="height" mode="selector">
+      <view class="picker">
+        当前选择：{{height[indexHeight]}}
+      </view>
+    </picker>
+  </view>
+  <view class="section">
+    <view class="section-title">体重(kg)</view>
+    <picker bindchange="bindWeightChange" value="{{indexWeight}}" range="{{weight}}" name="weight" mode="selector">
+      <view class="picker">
+        当前选择：{{weight[indexWeight]}}
+      </view>
+    </picker>
+  </view>
+  <button formType="submit" type="primary" class="inputButton" catchtap="onRecommendTap">生成你的个性化饮食菜单</button>
+</form>

@@ -1,0 +1,58 @@
+<view class="classname">
+  <view class="foodList">
+    <view class="flex-row-1">
+      <image src="/images/icon/rect_blue.png" class="title-img" />
+      <text class="meal-title">感冒不宜</text>
+    </view>
+    <block>
+      <view class="flex-row">
+        <text class="meal-item">青椒炒蛋</text>
+      </view>
+      <view class="flex-row">
+        <text class="meal-item">青椒牛肉</text>
+      </view>
+      <view class="flex-row">
+        <text class="meal-item">炸鸡腿</text>
+      </view>
+      <view class="flex-row">
+        <text class="meal-item">炸猪排</text>
+      </view>
+    </block>
+  </view>
+  <view class="flex-row-1">
+    <image src="/images/icon/rect_orange.png" class="title-img" />
+    <text class="meal-title">肠胃炎不宜</text>
+  </view>
+  <block>
+    <view class="flex-row">
+      <text class="meal-item">水煮活鱼</text>
+    </view>
+    <view class="flex-row">
+      <text class="meal-item">小龙虾</text>
+    </view>
+    <view class="flex-row">
+      <text class="meal-item">炸鸡腿</text>
+    </view>
+    <view class="flex-row">
+      <text class="meal-item">炸猪排</text>
+    </view>
+  </block>
+  <view class="flex-row-1">
+    <image src="/images/icon/rect_black.png" class="title-img" />
+    <text class="meal-title">咽喉炎不宜</text>
+  </view>
+  <block>
+    <view class="flex-row">
+      <text class="meal-item">青椒炒蛋</text>
+    </view>
+    <view class="flex-row">
+      <text class="meal-item">青椒牛肉</text>
+    </view>
+    <view class="flex-row">
+      <text class="meal-item">炸鸡腿</text>
+    </view>
+    <view class="flex-row">
+      <text class="meal-item">炸猪排</text>
+    </view>
+  </block>
+</view>

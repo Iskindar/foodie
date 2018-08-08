@@ -1,0 +1,45 @@
+<view class="container">
+  <view class="head">
+    <view class="wrap">
+      <view class="top">
+        <canvas class="cir" style="width:212px; height:212px;" canvas-id="canvasArc">
+        </canvas>
+        <view class="cc">
+          <text class="score-num">90</text>
+          <text class="score-text">分</text>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="post-container-title">
+    <text>卡路里摄入情况</text>
+  </view>
+  <view class="columnChart">
+    <canvas canvas-id="columnCanvas" class="canvas"></canvas>
+  </view>
+  <view class="post-container-title">
+    <text>一周摄入三大营养素比例</text>
+  </view>
+  <view class="columnChart">
+    <canvas canvas-id="pieCanvas" class="canvas"></canvas>
+  </view>
+  <view class="post-container-title">
+    <text>饮食时间波动情况</text>
+  </view>
+  <view class="columnChart">
+     <canvas canvas-id="lineCanvas" class="canvas"></canvas>
+  </view>
+  <view class="post-container-title">
+    <text>饮食建议</text>
+  </view>
+  <view class="suggestion-container">
+    <view class="suggestion">综合一周的饮食数据，尚食管家为您的饮食提以下几点建议：</view>
+    <view class="suggestion">三大营养素中，蛋白质含量摄入过高，脂肪和碳水化合物的摄入量基本符号要求。可减少蛋类，肉类的摄入量。</view>
+    <view class="suggestion">微量元素中，磷、钙基本符合标准，但铁的摄入量相对偏低，应多吃含铁量较高的食物，如菠菜、木耳、动物内脏等。维生素C的含量极低，建议加大蔬菜和水果的摄入量。</view>
+    <view class="suggestion">三餐热量分配不合理，早餐占比例过高。应减少早餐热量的摄入。</view>
+    <view class="suggestion">饮食时间规律，要继续保持</view>
+  </view>
+   <view class="bottom">
+    <text>*本次分析结果只反馈本周于食堂的饮食情况</text>
+  </view>
+</view>

@@ -1,0 +1,178 @@
+@import "microelement/microelement-template.wxss";
+
+page{
+  background-color: #fbf9fe;
+}
+.head {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px #ededed solid;
+  background-color: #fff;
+}
+.date {
+  margin: 30rpx auto 10rpx auto;
+}
+
+.proportion {
+  display: flex;
+  flex-direction: column;
+  padding-top: 20rpx;
+  border-top: 1px #ededed solid;
+  
+}
+
+.proportion-title {
+  margin: 30rpx auto 30rpx auto;
+  font-size: 40rpx;
+}
+
+.proportion-img {
+  width: 20rpx;
+  height: 20rpx;
+  margin-left: 40rpx;
+}
+
+.proportion-type {
+  font-size: 28rpx;
+  margin-right: 40rpx;
+  margin-left: 60rpx;
+  margin-bottom: 20rpx;
+  width: 160rpx;
+}
+
+.total-intake{
+  margin-left: 40rpx;
+  margin-bottom: 20rpx;
+}
+.main-proportion {
+  display: flex;
+  flex-direction: column;
+}
+
+.main-proportion-type-1 {
+  font-size: 28rpx;
+  margin-right: 60rpx;
+  margin-left: 40rpx;
+  margin-bottom: 20rpx;
+  width:190rpx; 
+}
+.proportion-num {
+  font-size: 28rpx;
+  margin-right: 40rpx;
+  margin-bottom: 20rpx;
+  width: 140rpx;
+}
+
+.proportion-judge {
+  
+  margin-right: 20rpx;
+  margin-bottom: 20rpx;
+  width: 100rpx;
+  
+}
+.judge-text-green{
+  color: #2aa515;
+  font-size: 32rpx;
+}
+.judge-text-red{
+  color: #d81e06;
+  font-size: 32rpx;
+}
+.judge-img {
+  width: 25rpx;
+  height: 40rpx;
+  margin-left: 60rpx;
+
+}
+
+.microelement-title {
+  margin-left: 300rpx;
+  font-size: 40rpx;
+
+}
+.microelement{
+  margin-top: 20rpx;
+}
+.mark-name {
+  font-size: 28rpx;
+  margin-left: 30rpx;
+  margin-right: 220rpx;
+  margin-bottom: 20rpx;
+}
+
+.mark-intake {
+  font-size: 28rpx;
+  margin-right: 180rpx;
+  margin-bottom: 20rpx;
+}
+
+.remark {
+  margin-bottom: 20rpx;
+  font-size: 28rpx;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px #ededed solid;
+  margin-top: 30rpx;
+  margin-bottom: 30rpx;
+}
+
+.bottom {
+  display: flex;
+  flex-direction: column;
+  font-size: 28rpx;
+  color: #8a8a8a;
+  margin-left: 60rpx;
+  margin-bottom: 20rpx;
+}
+
+.cir {
+  display: inline-block;
+  margin-top: 20rpx;
+}
+
+.top {
+  text-align: center;
+}
+
+.canvas-container {
+  border-top: 1px #ededed solid;
+}
+
+.microelement-container {
+  margin-top: 10rpx;
+  border-top: 1px #ededed solid;
+  background-color: #fff;
+}
+.proportion-container{
+ background-color: #fff;
+}
+.main-proportion-container{
+  background-color: #fff;
+}
+.post-container-title{
+  font-size: 40rpx;
+  margin-top: 20rpx;
+  text-align: center;
+  border-bottom: 1px #d2d2d2 solid;
+  width: 100%;
+  padding-bottom: 20rpx;
+}
+.suggestion-container{
+    background-color: white;
+    padding-top: 10px;
+}
+.suggestion{
+  margin-left: 20rpx;
+  font-size: 30rpx;
+  margin-right: 20rpx;
+  margin-bottom: 20rpx;
+
+}
+.none{
+  margin-top: 500rpx;
+  font-size: 14px;
+  text-align: center;
+}

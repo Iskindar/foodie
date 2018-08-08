@@ -1,0 +1,77 @@
+@import "movie/movie-template.wxss";
+
+.container {
+}
+
+.movie-list-container {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  margin: 0 auto 20rpx;
+}
+
+.movies-head {
+  padding: 30rpx 20rpx 22rpx;
+}
+
+.hr{
+    margin-top:25rpx;
+    height:1px;
+    width: 100%;
+    background-color: #d9d9d9;
+}
+.slogan {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.discount-container {
+  display: flex;
+  flex-direction: row;
+  margin-top: 30rpx;
+
+}
+
+.post-container-title {
+  font-size: 50rpx;
+  margin-top: 50rpx;
+  text-align: center;
+  color: #dd6572;
+  font-weight: bold;
+}
+
+.search {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 80rpx;
+  background-color: #f2f2f2;
+}
+
+.search-img {
+  margin: auto 0 auto 20rpx;
+}
+
+.placeholder {
+  font-size: 28rpx;
+  margin-left: 20rpx;
+  color: #d1d1d1;
+}
+
+.search input {
+  height: 100%;
+  width: 600rpx;
+  margin-left: 20px;
+  font-size: 28rpx;
+}
+
+.search-panel {
+  position: absolute;
+  top: 80rpx;
+}
+
+.xx-img {
+  margin: auto 0 auto 10rpx;
+  width: 30rpx;
+  height: 30rpx;
+}

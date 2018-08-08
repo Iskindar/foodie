@@ -1,0 +1,20 @@
+<view class="container">
+  <view class="banner">
+    <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}"></image>
+  </view>
+  <form bindsubmit="formSubmit" bindreset="formReset">
+    <view class="section">
+      <text class="section-text">学号</text>
+      <image src="/images/icon/vertical-line2.png" class="vertical_line"></image>
+      <input placeholder="请输入您的学号" name="username" />
+    </view>
+    <view class="section">
+      <text class="section-text">密码</text>
+      <image src="/images/icon/vertical-line2.png" class="vertical_line"></image>
+      <input placeholder="初始密码为身份证后六位" password name="paswd" />
+    </view>
+    <view class="btn-area">
+      <button formType="submit" type="primary" catchtap="onBindingTap">立即绑定</button>
+    </view>
+  </form>
+</view>

@@ -1,0 +1,8 @@
+
+<template name="movieTemplate">
+  <view class="movie-container" >
+    <image class="movie-img" src="{{image}}"></image>
+    <text class="movie-text" >{{name}}</text>
+    <text>{{price}}</text>
+  </view>
+</template>

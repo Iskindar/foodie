@@ -1,0 +1,35 @@
+.mood-container {
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px solid #ededed;
+}
+
+.users-avatar {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 50%;
+  margin: 30rpx 30rpx 30rpx 20rpx;
+}
+
+.mood-text-container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 30rpx;
+}
+
+.users-name {
+  font-size: 28rpx;
+  color: #1296db;
+  margin-bottom: 10rpx;
+}
+
+.mood-content {
+  font-size: 28rpx;
+  color: #515151;
+  margin-bottom: 8rpx;
+}
+
+.submit-date {
+  font-size: 24rpx;
+  color: #8a8a8a;
+}

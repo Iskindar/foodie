@@ -1,0 +1,23 @@
+.add-container{
+    display: flex;
+    flex-direction: column;
+    margin-top: 30rpx;
+    background: #fff;
+}
+
+.add-textarea{
+    height: 500rpx;
+    width: 100%;
+    border-top: 1px solid #ededed;
+    border-bottom: 1px solid #ededed;
+    margin-bottom: 20rpx;
+    padding: 20rpx;
+    margin-right: 20rpx;
+}
+.add-button{
+    width: 95%;
+    height: 75rpx;
+    font-size: 35rpx;
+    margin-top: 40rpx;
+    
+}

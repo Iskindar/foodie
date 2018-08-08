@@ -1,0 +1,26 @@
+<view>
+  <view class="userinfo-container" catchtap="onPersonalInfoTap">
+    <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}"></image>
+    <view class="text-container">
+      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+      <text class="city-text">个人信息</text>
+    </view>
+  </view>
+
+  <view class="button-container" catchtap="onHealthTap">
+    <image class="label-img" src="/images/icon/health.png"></image>
+    <text class="label-font">我的健康</text>
+  </view>
+  <view class="button-container" catchtap="onBraceletTap">
+    <image class="label-img" src="/images/icon/bracelet.png"></image>
+    <text class="label-font">绑定帐号</text>
+  </view>
+  <view class="button-container" catchtap="onFeedbackTap">
+    <image class="label-img" src="/images/icon/comment.png" catchtap="onFeedbackTap"></image>
+    <text class="label-font">反馈</text>
+  </view>
+  <view class="button-container" catchtap="onAboutTap">
+    <image class="label-img" src="/images/icon/about.png"></image>
+    <text class="label-font">关于</text>
+  </view>
+</view>

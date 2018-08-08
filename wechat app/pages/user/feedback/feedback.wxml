@@ -1,0 +1,11 @@
+<view>
+  <view class="feedback-container">
+    <form bindsubmit="onSubmitTap">
+      <textarea placeholder="请输入反馈内容" auto-focus="true" class="feedback-textarea" name="textarea" />
+      <text class="feedback-text">欢迎提出您的宝贵意见，尚食团队将竭诚为大家服务</text>
+      <button form-type="submit" type="primary" class="feedback-button">
+        <text>提交</text>
+      </button>
+    </form>
+  </view>
+</view>

@@ -1,0 +1,32 @@
+@import "mood/mood-template.wxss";
+.head-img{
+    height: 320rpx;
+    width: 100%;
+}
+
+.user-avatar{
+    height:140rpx;
+    width: 140rpx;
+    position: absolute;
+    top:240rpx;
+    right: 30rpx;
+
+}
+.user-nickname{
+    font-size: 45rpx;
+    color: #fff;
+    position: absolute;
+    top: 260rpx;
+    right:200rpx;
+}
+.moods-container{
+    margin-bottom: 30rpx;
+    margin-top: 20rpx;
+}
+.add-img{
+    width: 80rpx;
+    height: 80rpx;
+    position: absolute;
+    bottom: 130rpx;
+    right: 80rpx;
+}

@@ -1,0 +1,47 @@
+<import src="post-item/post-item-template.wxml" />
+<view class="container">
+  <view class=" banner ">
+    <text class="banner-title">尚食</text>
+    <text class="banner-subtitle">您专属的食堂管家</text>
+  </view>
+  <view class="mainFunction-container">
+    <view class="mainFunction-row">
+      <view class="singleFunction-container" catchtap="onAnalysisTap">
+        <image src="/images/icon/Hamburger.png" class="singleFunction-img"></image>
+        <text>饮食分析</text>
+      </view>
+      <image src="/images/icon/vertical-line.png" class="vertical-line"></image>
+      <view class="singleFunction-container" catchtap="onRestInquiryTap">
+        <image src="/images/icon/Thanksgiving.png" class="singleFunction-img"></image>
+        <text>余菜查询</text>
+      </view>
+
+      <image src="/images/icon/vertical-line.png" class="vertical-line"></image>
+
+      <view class="singleFunction-container" catchtap="onReportTap">
+        <image src="/images/icon/report.png" class="singleFunction-img"></image>
+        <text>饮食周报</text>
+      </view>
+    </view>
+  </view>
+  <view class="hr"></view>
+  <!--<view class="mainFunction-container">
+    <view class="mainFunction-row">
+      <view class="singleFunction-container" catchtap="onStopTap">
+        <image src="/images/icon/stop.png" class="singleFunction-img"></image>
+        <text>饮食禁忌</text>
+      </view>
+      <image src="/images/icon/vertical-line.png" class="vertical-line"></image>
+      <view class="singleFunction-container" catchtap="onRecommendTap">
+        <image src="/images/icon/recommend.png" class="singleFunction-img"></image>
+        <text>饮食定制</text>
+      </view>
+      <image src="/images/icon/vertical-line.png" class="vertical-line"></image>
+      <view class="singleFunction-container" catchtap="onDiscountPostTap">
+        <image src="/images/icon/news.png" class="singleFunction-img"></image>
+        <text>优惠特荐</text>
+      </view>
+    </view>
+  </view>-->
+  <!--<view class="hr"></view>-->
+</view>

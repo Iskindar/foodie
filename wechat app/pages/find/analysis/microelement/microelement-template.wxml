@@ -1,0 +1,22 @@
+<template name="microelementTemplate">
+  <view class="flex-row">
+    <view class="microelement-content">
+      <text class="microelement-type">{{name}}</text>
+      <view class="flex-column">
+        <text class="microelement-intake">摄入量：{{intake}}{{recommendText}}</text>
+        <text class="microelement-recommend">推荐：{{recommend}}{{recommendText}}</text>
+      </view>
+      <block wx:if="{{microJudge}}" class="multiple" >
+      <text class="style_green">{{multiple}}%</text>
+      </block>
+      <block wx:else  class="multiple" >
+      <text class="style_red">{{multiple}}%</text>
+      </block>
+     
+    </view>
+    
+  </view>
+  <modal class="modal" data="{{modalHidden}}" hidden="{{modalHidden}}" no-cancel bindconfirm="modalChange" bindcancel="modalChange" title="饮食建议">
+    <view>{{suggestion}}</view>
+  </modal>
+</template>

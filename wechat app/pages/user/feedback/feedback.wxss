@@ -1,0 +1,26 @@
+.feedback-container{
+    display: flex;
+    flex-direction: column;
+    margin-top: 30rpx;
+    background: #fff;
+}
+.feedback-text{
+    font-size: 24rpx;
+    color: #8a8a8a;
+    margin-left: 20rpx;
+}
+.feedback-textarea{
+    height: 500rpx;
+    width: 100%;
+    border-top: 1px solid #ededed;
+    border-bottom: 1px solid #ededed;
+    margin-bottom: 20rpx;
+    padding: 20rpx;
+}
+.feedback-button{
+    width: 95%;
+    height: 75rpx;
+    font-size: 35rpx;
+    margin-top: 40rpx;
+    
+}

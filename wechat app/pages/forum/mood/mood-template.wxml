@@ -1,0 +1,11 @@
+<template name="moodTemplate">
+
+  <view class="mood-container">
+    <image src="{{avatarUrl}}" class="users-avatar"></image>
+    <view class="mood-text-container">
+      <text class="users-name">{{nickname}}</text>
+      <text class="mood-content">{{moodtext}}</text>
+      <text class="submit-date">{{formatTime}}</text>
+    </view>
+  </view>
+</template>

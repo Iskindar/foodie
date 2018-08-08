@@ -1,0 +1,61 @@
+.microelement-content{
+    display: flex;
+    flex-direction: row;
+    margin-top: 10rpx;
+    border-top: 1 px #8a8a8a solid;
+    width: 100%;
+}
+.microelement-type{
+    font-size: 30rpx;
+    width: 120rpx;
+    color: #8a8a8a;
+    margin-left: 30rpx;
+    margin-top: 20rpx;
+    margin-bottom: 40rpx;
+    margin-right: 70rpx;
+}
+.flex-column{
+    display:flex;
+    flex-direction: column; 
+     margin-right: 50rpx;
+      width: 280rpx;
+}
+
+.microelement-intake{
+    font-size: 30rpx;
+    color: #8a8a8a;
+    margin-bottom: 20rpx;
+   
+}
+.microelement-recommend{
+    color: #cdcdcd;
+    font-size: 30rpx;
+    margin-bottom: 20rpx;
+    width: 240rpx;
+}
+.multiple{
+    color: #2aa515;
+    margin-top: 20rpx;
+    margin-left: 10rpx;
+    font-size: 30rpx;
+    width: 60rpx;
+}
+.plaint-img{
+    width: 40rpx;
+    height: 40rpx;
+    margin: 13rpx 40rpx 30rpx 50rpx;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px #ededed solid;
+  margin-top: 30rpx;
+  margin-bottom: 30rpx;
+}
+.style_green{
+    color: #2aa515;
+}
+.style_red{
+    color: #d81e06;
+}

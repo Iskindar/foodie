@@ -1,0 +1,32 @@
+
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+ 
+  border-bottom: 1px #ededed solid;
+  padding: 15rpx;
+}
+
+.flex-row-right {
+  margin-right: 30rpx;
+
+  margin-bottom: 30rpx;
+  margin-top: 30rpx;
+  color: #8a8a8a;
+}
+
+.flex-row-left {
+  margin-left: 30rpx;
+  margin-bottom: 30rpx;
+  margin-top: 30rpx;
+}
+
+.flex-row-right-img {
+  width: 120rpx;
+  height: 120rpx;
+  margin-right: 30rpx;
+  margin-bottom: 20rpx;
+  
+}

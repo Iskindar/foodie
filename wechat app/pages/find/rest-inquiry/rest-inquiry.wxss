@@ -1,0 +1,50 @@
+.picker{
+    padding: 13px;
+    background-color: #fff;
+}
+page{
+    background-color: #fbf9fe;
+}
+.section-title{
+    margin-top: 40rpx;
+    margin-bottom: 40rpx;
+    margin-left: 40rpx;
+}
+.another-section{
+    margin-top: 100rpx;
+}
+.inputButton{
+    margin: 20rpx 40rpx 20rpx 40rpx;
+    border-radius: 10px;
+}
+
+.proportion-type {
+  font-size: 36rpx;
+  margin-right: 100rpx;
+  margin-left: 60rpx;
+  margin-bottom: 20rpx;
+  width: 350rpx;
+}
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px #ededed solid;
+  margin-top: 30rpx;
+  margin-bottom: 30rpx;
+  
+}
+.rest-title-container{
+    margin-top: 62rpx;
+    border-bottom: 1px solid #ededed;
+    padding: 20rpx;
+}
+.rest-title{
+
+    
+    margin-bottom: 40rpx;
+    margin-left: 40rpx;
+}
+.food-container{
+    background-color: #fff;
+    margin-top: 40rpx;
+}

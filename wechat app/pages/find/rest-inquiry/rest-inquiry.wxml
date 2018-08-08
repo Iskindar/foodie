@@ -1,0 +1,21 @@
+<view>
+  <view class="section">
+    <view class="section-title">请输入你需要查询的食堂：</view>
+    <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
+      <view class="picker">
+        当前选择：{{array[index]}}
+      </view>
+    </picker>
+  </view>
+  <view>
+  <view class="rest-title-container">
+      <text class="rest-title">食堂余菜情况</text>
+      </view>
+    <block wx:for="{{foodData}}" class="food-container" >
+      <view class="flex-row">
+        <text class="proportion-type">{{item.name}}</text>
+        <text class="proportion-type">{{item.food_num}}份</text>
+      </view>
+    </block>
+  </view>
+</view>

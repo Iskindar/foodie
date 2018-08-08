@@ -1,0 +1,43 @@
+.meal {
+  display: flex;
+  flex-direction: column;
+}
+
+.foodList {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+}
+
+.flex-row-1 {
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px #ededed dotted;
+  padding-bottom: 20rpx;
+}
+
+.meal-title {
+  font-size: 40rpx;
+  margin-left: 20rpx;
+  margin-top: 40rpx;
+}
+
+.title-img {
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+  margin-top: 40rpx;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  /*justify-content: space-around;*/
+  border-bottom: 1px #ededed dotted;
+  padding: 10px;
+}
+
+.meal-item {
+  font-size: 34rpx;
+  margin-left: 40rpx;
+}

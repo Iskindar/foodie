@@ -1,0 +1,113 @@
+<import src="microelement/microelement-template" />
+<view wx:if="{{receive}}">
+  <view class="head">
+    <text class="date">{{formatDate}}</text>
+  </view>
+  <view class="proportion">
+    <text class="proportion-title">记录的食物</text>
+    <view class="proportion-container">
+      <view class="flex-row">
+        <text class="proportion-type">菜名</text>
+        <text class="proportion-type">份数</text>
+        <text class="proportion-type">所含热量</text>
+      </view>
+      <block wx:for="{{food}}" wx:for-item="dish">
+        <view class="flex-row">
+          <text class="proportion-type">{{dish.name}}</text>
+          <text class="proportion-type">1份</text>
+          <text class="proportion-type">{{dish.calorie}}千卡</text>
+        </view>
+      </block>
+      <view class="flex-row">
+        <text class="total-intake" data="{{totalCalorie}}">总摄入量：{{totalCalorie}}千卡</text>
+      </view>
+    </view>
+  </view>
+  <view class="post-container-title">
+    <text>饮食分析</text>
+  </view>
+  <view class="suggestion-container">
+    <view class="suggestion">综合本次数据，尚食管家为您的饮食提以下几点建议：</view>
+    <view class="suggestion">本餐摄入的热量适中，符合您这种体型人的晚餐的摄入热量标准</view>
+    <view class="suggestion">三大营养素中，蛋白质含量摄入偏高，脂肪和碳水化合物的摄入量基本符号要求。可适当减少肉类、蛋类的摄入量。</view>
+  </view>
+
+  <!--<view class="proportion">
+    <text class="proportion-title">三餐热量比例</text>
+    <view class="proportion-container">
+      <view class="canvas-container">
+        <canvas canvas-id="mealProportion" class="canvas" style="height:300px"></canvas>
+      </view>
+      <view class="flex-row">
+        <image src="/images/icon/rect_blue.png" class="proportion-img"></image>
+        <text class="proportion-type">早餐</text>
+        <text class="proportion-num">33%</text>
+        <text class="proportion-judge">合适</text>
+        <image src="/images/icon/get.png" class="judge-img"></image>
+      </view>
+      <view class="flex-row">
+        <image src="/images/icon/rect_blue.png" class="proportion-img"></image>
+        <text class="proportion-type">午餐</text>
+        <text class="proportion-num">33%</text>
+        <text class="proportion-judge">合适</text>
+        <image src="/images/icon/get.png" class="judge-img"></image>
+      </view>
+      <view class="flex-row">
+        <image src="/images/icon/rect_blue.png" class="proportion-img"></image>
+        <text class="proportion-type">晚餐</text>
+        <text class="proportion-num">34%</text>
+        <text class="proportion-judge">合适</text>
+        <image src="/images/icon/get.png" class="judge-img"></image>
+      </view>
+    </view>
+  </view>-->
+  <view class="main-proportion">
+    <text class="proportion-title">三大营养素供能比例</text>
+    <view class="main-proportion-container">
+      <view class="canvas-container">
+        <canvas canvas-id="pieCanvas" class="canvas" style="height:300px"></canvas>
+      </view>
+      <block wx:for="{{mainElement}}">
+        <view class="flex-row">
+          <image src="{{item.imageUrl}}" class="proportion-img"></image>
+          <text class="main-proportion-type-1">{{item.name}}</text>
+          <text class="proportion-num">{{item.weight}}克</text>
+          <block wx:if="{{item.mainJudge<1}}" class="proportion-judge">
+            <text class="judge-text-red">偏低</text>
+            <image src="/images/icon/down.png" class="judge-img"></image>
+          </block>
+          <block wx:elif="{{item.mainJudge>1}}" class="proportion-judge">
+            <text class="judge-text-red">偏高</text>
+            <image src="/images/icon/up.png" class="judge-img"></image>
+          </block>
+          <block wx:else class="proportion-judge">
+            <text class="judge-text-green">合适</text>
+            <image src="/images/icon/get.png" class="judge-img"></image>
+          </block>
+        </view>
+      </block>
+    </view>
+  </view>
+  <view class="microelement">
+    <text class="microelement-title">微量元素</text>
+    <view class="microelement-container">
+      <view class="flex-row">
+        <text class="mark-name">名称</text>
+        <text class="mark-intake">摄入量</text>
+        <text class="remark">备注</text>
+      </view>
+      <block wx:for="{{recommend_key}}" wx:for-item="item" wx:for-index="idx">
+        <view>
+          <template is="microelementTemplate" data="{{...item}}" />
+        </view>
+      </block>
+    </view>
+  </view>
+  <view class="bottom">
+    <text>1.本次分析结果只反馈调查当前记录的饮食情况</text>
+    <text>2.微量元素推荐数值仅供参考</text>
+  </view>
+</view>
+<view wx:else class="none">
+  <text>暂无食物记录数据</text>
+</view>

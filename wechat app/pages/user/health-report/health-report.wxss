@@ -1,0 +1,36 @@
+.post-container-title{
+  font-size: 40rpx;
+  margin-top: 20rpx;
+  text-align: center;
+  color: #dd6572;
+  border-bottom: 1px #d2d2d2 solid;
+  width: 100%;
+  padding-bottom: 20rpx;
+}
+.head {
+  display: flex;
+  flex-direction: column;
+  height: 350rpx;
+  width: 100%;
+  background-color: #e0620d;
+}
+.cc {
+  margin-top: -180px;
+}
+
+.score-num {
+  font-size: 70rpx;
+  color: white;
+}
+
+.score-text {
+  font-size: 28rpx;
+  color: white;
+}
+.cir {
+  display: inline-block;
+  margin-top: 20rpx;
+}
+.top {
+  text-align: center;
+}

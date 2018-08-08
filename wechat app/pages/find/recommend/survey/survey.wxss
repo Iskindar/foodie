@@ -1,0 +1,19 @@
+.picker{
+    padding: 13px;
+    background-color: #fff;
+}
+page{
+    background-color: #fbf9fe;
+}
+.section-title{
+    margin-top: 20rpx;
+    margin-bottom: 20rpx;
+    margin-left: 33rpx;
+}
+.another-section{
+    margin-top: 100rpx;
+}
+.inputButton{
+    margin: 20rpx 40rpx 20rpx 40rpx;
+    border-radius: 10px;
+}

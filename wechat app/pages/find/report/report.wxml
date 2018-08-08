@@ -1,0 +1,15 @@
+<block >
+  <view class="report-container">
+    <view class="circle-container">
+      <image src="/images/icon/round.png" class="report-circle"></image>
+    </view>
+    <view class="flex-column" catchtap="onReportDetailTap">
+      <text class="report-title">第1周饮食周报</text>
+      <text class="report-text">2017/1/2——2017/1/8</text>
+      <view class="report-bottom">
+        <text class="report-content">点击查看您的饮食周报</text>
+        <image src="/images/icon/right-arrow.png" class="report-image"></image>
+      </view>
+    </view>
+  </view>
+</block>

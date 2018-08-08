@@ -1,0 +1,26 @@
+<view>
+  <view class="head">
+    <image src="/images/post/4.jpg" class="head-img"></image>
+    <view class="head-title">
+      <text class="head-name">尚食</text>
+      <text class="head-text">简介</text>
+    </view>
+  </view>
+  <view class="summary">
+    <text class="summary-title">简介</text>
+    <view class="summary-text">
+      <text>该微信小程序基于RFID餐盘系统，旨在为在食堂用餐的用户提供个性化的服务。本小程序可以让用户知晓食堂实时的余菜量以及用户每日在食堂的饮食记录，营养摄入量。此外，用户可在健康报告中了解自己每周的饮食综合情况，及时调整自己的膳食结构。用户饮食定制功能暂未开发，敬请期待~</text>
+    </view>
+    <view class="summary-bottom">
+      <image src="/images/icon/vertical-line.png"></image>
+      <view class="summary-bottomText-container">
+        <text class="summary-bottomText">营养数据来源：美国农业部数据库</text>
+        <text class="summary-bottomText">腾讯云提供云计算服务</text>
+      </view>
+    </view>
+  </view>
+  <view class="bottom">
+    <text class="bottom-text">尚食Bingo</text>
+    <text class="bottom-text">Copyright @2017 All Rights Reserved</text>
+  </view>
+</view>

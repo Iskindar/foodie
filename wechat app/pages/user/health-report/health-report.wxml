@@ -1,0 +1,15 @@
+<view class="head">
+  <view class="wrap">
+    <view class="top">
+      <canvas class="cir" style="width:212px; height:212px;" canvas-id="canvasArc">
+      </canvas>
+      <view class="cc">
+        <text class="score-num">90</text>
+        <text class="score-text">分</text>
+      </view>
+    </view>
+  </view>
+</view>
+<view class="post-container-title">
+  <text>BMI指数</text>
+</view>

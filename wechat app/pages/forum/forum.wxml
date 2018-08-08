@@ -1,0 +1,22 @@
+<import src="mood/mood-template.wxml" />
+<view>
+  <image class="head-img" src="/images/forum/sls.jpg"></image>
+  <text class="user-nickname">{{userInfo.nickName}}</text>
+  <image src="{{userInfo.avatarUrl}}" class="user-avatar"></image>
+  <view class="mood-container">
+    <image src="/images/avatar/2.jpg" class="users-avatar"></image>
+    <view class="mood-text-container">
+      <text class="users-name">村民A</text>
+      <text class="mood-content">今天食堂的菜好评，手动点赞</text>
+      <text class="submit-date">2017-5-11 20:09:21 </text>
+    </view>
+  </view>
+  <block wx:if="{{display}}">
+  <block  wx:for="{{mood}}" wx:for-item="item">
+    <view class="moods-container">
+      <template is="moodTemplate" data="{{...item}}" />
+    </view>
+  </block>
+  </block>
+  <image src="/images/icon/add.png" class="add-img" catchtap="onAddTap"></image>
+</view>

@@ -1,0 +1,59 @@
+<view>
+  <view class="date">2017-4-9</view>
+  <view class="meal">
+    <view class="mealList">
+      <view class="meal-title">早餐</view>
+      <view class="flex-row">
+        <text class="meal-item">馒头</text>
+        <text class="meal-item">1个</text>
+        <text class="meal-item">90千卡</text>
+      </view>
+      <view class="flex-row">
+        <text class="meal-item">豆浆</text>
+        <text class="meal-item">1个</text>
+        <text class="meal-item">90千卡</text>
+      </view>
+      <view class="flex-row">
+        <text class="meal-item">鸡蛋</text>
+        <text class="meal-item">1个</text>
+        <text class="meal-item">90千卡</text>
+      </view>
+    </view>
+    <view class="mealList">
+      <view class="meal-title">中餐</view>
+      <view class="flex-row">
+        <text class="meal-item">米饭</text>
+        <text class="meal-item">1份</text>
+        <text class="meal-item">90千卡</text>
+      </view>
+      <view class="flex-row">
+        <text class="meal-item">茄子炒蛋</text>
+        <text class="meal-item">1个</text>
+        <text class="meal-item">90千卡</text>
+      </view>
+      <view class="flex-row">
+        <text class="meal-item">排骨烧肉</text>
+        <text class="meal-item">1个</text>
+        <text class="meal-item">90千卡</text>
+      </view>
+    </view>
+    <view class="mealList">
+      <view class="meal-title">晚餐</view>
+      <view class="flex-row">
+        <text class="meal-item">米饭</text>
+        <text class="meal-item">1个</text>
+        <text class="meal-item">90千卡</text>
+      </view>
+      <view class="flex-row">
+        <text class="meal-item">肉饼蒸蛋</text>
+        <text class="meal-item">1个</text>
+        <text class="meal-item">90千卡</text>
+      </view>
+      <view class="flex-row">
+        <text class="meal-item">炒豆芽</text>
+        <text class="meal-item">1个</text>
+        <text class="meal-item">90千卡</text>
+      </view>
+    </view>
+  </view>
+</view>

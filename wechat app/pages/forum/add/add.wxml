@@ -1,0 +1,6 @@
+<view>
+  <form class="add-container" bindsubmit="formSubmit">
+    <textarea placeholder="说点啥吧……"  auto-focus="true" class="add-textarea" name="moodText"/>
+    <button form-type="submit" type="primary" class="add-button" catchtap="onSendTap">发送</button>
+  </form>
+</view>
