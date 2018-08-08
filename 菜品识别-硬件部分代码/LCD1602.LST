@@ -1,0 +1,349 @@
+C51 COMPILER V9.52.0.0   LCD1602                                                           05/27/2017 16:27:44 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE LCD1602
+OBJECT MODULE PLACED IN LCD1602.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE LCD1602.c ROM(COMPACT) BROWSE DEBUG OBJECTEXTEND TABS(2)
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include <string.h>
+   3          #include <intrins.h>
+   4          #include "main.h"
+   5          #include "slrc632.h"
+   6          #include "iso14443a.h"
+   7          #include "iso14443b.h"
+   8          #include "iso15693.h" 
+   9          #include "LCD1602.h"
+  10          #include <absacc.h>
+  11          
+  12          
+  13          
+  14          void delayNOP()
+  15          {
+  16   1        _nop_();
+  17   1        _nop_();
+  18   1        _nop_();
+  19   1        _nop_();
+  20   1        _nop_();
+  21   1        _nop_();
+  22   1        _nop_();
+  23   1        _nop_();
+  24   1        _nop_();
+  25   1      }
+  26          
+  27          
+  28          void delay_ms(unsigned int ms)
+  29          {
+  30   1        unsigned char k;
+  31   1        while (ms--)
+  32   1        {
+  33   2          for (k = 0; k < 114; k++)
+  34   2            ;
+  35   2        }
+  36   1      }
+  37          
+  38          
+  39          void lcd_busy()
+  40          {
+  41   1        bit busy;
+  42   1        busy = 1;
+  43   1        while (busy)
+  44   1        {
+  45   2          LCDRS = 0;
+  46   2          LCDRW = 1;
+  47   2          LCDEN = 1;
+  48   2          busy = (bit)(P0 &0x80);
+  49   2          delayNOP();
+  50   2        }
+  51   1        LCDEN = 0;
+  52   1      }
+  53          
+  54          
+  55          void lcd_wcmd(unsigned char cmd, bit Check)
+C51 COMPILER V9.52.0.0   LCD1602                                                           05/27/2017 16:27:44 PAGE 2   
+
+  56          {
+  57   1        if (Check)
+  58   1        lcd_busy();     //进行忙检测
+  59   1      
+  60   1        LCDRS = 0;
+  61   1        LCDRW = 0;
+  62   1        LCDEN = 1;
+  63   1        P0 = cmd;
+  64   1        delayNOP();
+  65   1        LCDEN = 0;
+  66   1      }
+  67          
+  68          
+  69          void lcd_wdat(unsigned char dat)
+  70          {
+  71   1        lcd_busy();         //进行忙检测
+  72   1        LCDRS = 1;
+  73   1        LCDRW = 0;
+  74   1        LCDEN = 1;
+  75   1        P0 = dat;
+  76   1        delayNOP();
+  77   1        LCDEN = 0;
+  78   1      }
+  79          
+  80          void LcdInit(void)
+  81          {
+  82   1        delay_ms(15);
+  83   1        lcd_wcmd(0x38, 0); //16*2显示，5*7点阵，8位数据
+  84   1        delay_ms(5);
+  85   1        lcd_wcmd(0x38, 0); //不进行忙检测，强制执行三次。
+  86   1        delay_ms(5);
+  87   1        lcd_wcmd(0x38, 0);
+  88   1        delay_ms(5);
+  89   1      
+  90   1        lcd_wcmd(0x38, 1); //进行忙检测
+  91   1        delay_ms(5);
+  92   1        lcd_wcmd(0x0c, 1); //显示开，关光标
+  93   1        delay_ms(5);
+  94   1        lcd_wcmd(0x06, 1); //移动光标
+  95   1        delay_ms(5);
+  96   1        lcd_wcmd(0x01, 1); //清除LCD的显示内容
+  97   1        delay_ms(5);
+  98   1      }
+  99          
+ 100          void  DispHZ(unsigned char addr,unsigned char *buf,unsigned char lenofh_word)
+ 101          {
+ 102   1        unsigned char *pc=buf;
+ 103   1        unsigned char ii=lenofh_word;
+ 104   1        //if(ii>15) ii=15;
+ 105   1        lcd_wcmd(addr,1);
+ 106   1        while(ii--) lcd_wdat(*pc++);  
+ 107   1      }
+ 108          
+ 109          void LCD_UIDSHOW(unsigned char lenth)     //LCD显示卡代表的菜
+ 110          {
+ 111   1        unsigned int i;
+ 112   1        unsigned char  *pi; 
+ 113   1        pi=sBuffer;
+ 114   1        i=lenth;
+ 115   1        if(i==8)        //只有一张卡
+ 116   1        {
+ 117   2          lcd_wcmd(0x01, 1); //清除LCD的显示内容
+C51 COMPILER V9.52.0.0   LCD1602                                                           05/27/2017 16:27:44 PAGE 3   
+
+ 118   2          switch(pi[0])
+ 119   2            {
+ 120   3                  case 0x22:
+ 121   3                      DispHZ(0x80,"二两米饭     3元",16);
+ 122   3                      break;
+ 123   3                  
+ 124   3                  case 0x8E:
+ 125   3                      DispHZ(0x80,"西红柿炒鸡蛋 4元",16);
+ 126   3                      break;
+ 127   3                  
+ 128   3                  case 0x97:
+ 129   3                      DispHZ(0x80,"炒空心菜     5元",16);
+ 130   3                      break;
+ 131   3                  
+ 132   3                  case 0x24:
+ 133   3                      DispHZ(0x80,"煎蛋        10元",16);
+ 134   3                      break;
+ 135   3            }
+ 136   2        }
+ 137   1        
+ 138   1        if(i==16)        //有两张卡
+ 139   1        {
+ 140   2          lcd_wcmd(0x01, 1); //清除LCD的显示内容
+ 141   2          switch(pi[0])
+ 142   2            {
+ 143   3                  case 0x22:
+ 144   3                      DispHZ(0x80,"二两米饭     3元",16);
+ 145   3                      break;
+ 146   3                  
+ 147   3                  case 0x8E:
+ 148   3                      DispHZ(0x80,"西红柿炒鸡蛋 4元",16);
+ 149   3                      break;
+ 150   3                  
+ 151   3                  case 0x97:
+ 152   3                      DispHZ(0x80,"炒空心菜     5元",16);
+ 153   3                      break;
+ 154   3                  
+ 155   3                  case 0x24:
+ 156   3                      DispHZ(0x80,"煎蛋        10元",16);
+ 157   3                      break;
+ 158   3            }
+ 159   2          switch(pi[8])
+ 160   2            {
+ 161   3                  case 0x22:
+ 162   3                      DispHZ(0x90,"二两米饭     3元",16);
+ 163   3                      break;
+ 164   3                  
+ 165   3                  case 0x8E:
+ 166   3                      DispHZ(0x90,"西红柿炒鸡蛋 4元",16);
+ 167   3                      break;
+ 168   3                  
+ 169   3                  case 0x97:
+ 170   3                      DispHZ(0x90,"炒空心菜     5元",16);
+ 171   3                      break;
+ 172   3                  
+ 173   3                  case 0x24:
+ 174   3                      DispHZ(0x90,"煎蛋        10元",16);
+ 175   3                      break;
+ 176   3            }
+ 177   2        }
+ 178   1        
+ 179   1        if(i==24)        //有三张卡
+C51 COMPILER V9.52.0.0   LCD1602                                                           05/27/2017 16:27:44 PAGE 4   
+
+ 180   1        {
+ 181   2          lcd_wcmd(0x01, 1); //清除LCD的显示内容
+ 182   2          switch(pi[0])
+ 183   2            {
+ 184   3                  case 0x22:
+ 185   3                      DispHZ(0x80,"二两米饭     3元",16);
+ 186   3                      break;
+ 187   3                  
+ 188   3                  case 0x8E:
+ 189   3                      DispHZ(0x80,"西红柿炒鸡蛋 4元",16);
+ 190   3                      break;
+ 191   3                  
+ 192   3                  case 0x97:
+ 193   3                      DispHZ(0x80,"炒空心菜     5元",16);
+ 194   3                      break;
+ 195   3                  
+ 196   3                  case 0x24:
+ 197   3                      DispHZ(0x80,"煎蛋        10元",16);
+ 198   3                      break;
+ 199   3            }
+ 200   2          switch(pi[8])
+ 201   2            {
+ 202   3                  case 0x22:
+ 203   3                      DispHZ(0x90,"二两米饭     3元",16);
+ 204   3                      break;
+ 205   3                  
+ 206   3                  case 0x8E:
+ 207   3                      DispHZ(0x90,"西红柿炒鸡蛋 4元",16);
+ 208   3                      break;
+ 209   3                  
+ 210   3                  case 0x97:
+ 211   3                      DispHZ(0x90,"炒空心菜     5元",16);
+ 212   3                      break;
+ 213   3                  
+ 214   3                  case 0x24:
+ 215   3                      DispHZ(0x90,"煎蛋        10元",16);
+ 216   3                      break;
+ 217   3            }
+ 218   2          switch(pi[16])
+ 219   2            {
+ 220   3                  case 0x22:
+ 221   3                      DispHZ(0x88,"二两米饭     3元",16);
+ 222   3                      break;
+ 223   3                  
+ 224   3                  case 0x8E:
+ 225   3                      DispHZ(0x88,"西红柿炒鸡蛋 4元",16);
+ 226   3                      break;
+ 227   3                  
+ 228   3                  case 0x97:
+ 229   3                      DispHZ(0x88,"炒空心菜     5元",16);
+ 230   3                      break;
+ 231   3                  
+ 232   3                  case 0x24:
+ 233   3                      DispHZ(0x88,"煎蛋        10元",16);
+ 234   3                      break;
+ 235   3            }
+ 236   2        }
+ 237   1        
+ 238   1        if(i==32)        //有四张卡
+ 239   1        {
+ 240   2          lcd_wcmd(0x01, 1); //清除LCD的显示内容
+ 241   2          switch(pi[0])
+C51 COMPILER V9.52.0.0   LCD1602                                                           05/27/2017 16:27:44 PAGE 5   
+
+ 242   2            {
+ 243   3                  case 0x22:
+ 244   3                      DispHZ(0x80,"二两米饭     3元",16);
+ 245   3                      break;
+ 246   3                  
+ 247   3                  case 0x8E:
+ 248   3                      DispHZ(0x80,"西红柿炒鸡蛋 4元",16);
+ 249   3                      break;
+ 250   3                  
+ 251   3                  case 0x97:
+ 252   3                      DispHZ(0x80,"炒空心菜     5元",16);
+ 253   3                      break;
+ 254   3                  
+ 255   3                  case 0x24:
+ 256   3                      DispHZ(0x80,"煎蛋        10元",16);
+ 257   3                      break;
+ 258   3            }
+ 259   2          switch(pi[8])
+ 260   2            {
+ 261   3                  case 0x22:
+ 262   3                      DispHZ(0x90,"二两米饭     3元",16);
+ 263   3                      break;
+ 264   3                  
+ 265   3                  case 0x8E:
+ 266   3                      DispHZ(0x90,"西红柿炒鸡蛋 4元",16);
+ 267   3                      break;
+ 268   3                  
+ 269   3                  case 0x97:
+ 270   3                      DispHZ(0x90,"炒空心菜     5元",16);
+ 271   3                      break;
+ 272   3                  
+ 273   3                  case 0x24:
+ 274   3                      DispHZ(0x90,"煎蛋        10元",16);
+ 275   3                      break;
+ 276   3            }
+ 277   2          switch(pi[16])
+ 278   2            {
+ 279   3                  case 0x22:
+ 280   3                      DispHZ(0x88,"二两米饭     3元",16);
+ 281   3                      break;
+ 282   3                  
+ 283   3                  case 0x8E:
+ 284   3                      DispHZ(0x88,"西红柿炒鸡蛋 4元",16);
+ 285   3                      break;
+ 286   3                  
+ 287   3                  case 0x97:
+ 288   3                      DispHZ(0x88,"炒空心菜     5元",16);
+ 289   3                      break;
+ 290   3                  
+ 291   3                  case 0x24:
+ 292   3                      DispHZ(0x88,"煎蛋        10元",16);
+ 293   3                      break;
+ 294   3            }
+ 295   2            
+ 296   2           switch(pi[24])
+ 297   2            {
+ 298   3                  case 0x22:
+ 299   3                      DispHZ(0x98,"二两米饭     3元",16);
+ 300   3                      break;
+ 301   3                  
+ 302   3                  case 0x8E:
+ 303   3                      DispHZ(0x98,"西红柿炒鸡蛋 4元",16);
+C51 COMPILER V9.52.0.0   LCD1602                                                           05/27/2017 16:27:44 PAGE 6   
+
+ 304   3                      break;
+ 305   3                  
+ 306   3                  case 0x97:
+ 307   3                      DispHZ(0x98,"炒空心菜     5元",16);
+ 308   3                      break;
+ 309   3                  
+ 310   3                  case 0x24:
+ 311   3                      DispHZ(0x98,"煎蛋        10元",16);
+ 312   3                      break;
+ 313   3            }
+ 314   2          }
+ 315   1      }
+ 316          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    920    ----
+   CONSTANT SIZE    =     68    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      13
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       2
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

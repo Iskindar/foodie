@@ -1,0 +1,647 @@
+C51 COMPILER V9.00   ISO14443B                                                             06/20/2013 19:36:44 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE ISO14443B
+OBJECT MODULE PLACED IN ISO14443B.OBJ
+COMPILER INVOKED BY: d:\Keil\C51\BIN\C51.EXE ISO14443B.C ROM(COMPACT) BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include "reg52.h"
+   2          #include <string.h>
+   3          #include "main.h"
+   4          #include "iso14443b.h" 
+   5          #include "slrc632.h"
+   6          
+   7          extern unsigned char g_cFWI;
+   8          extern struct TranSciveBuffer{unsigned char MfCommand;
+   9                                        unsigned int  MfLength;
+  10                                        unsigned char MfData[64];
+  11                                       };
+  12          //////////////////////////////////////////////////////////////////////
+  13          //REQUEST B
+  14          //////////////////////////////////////////////////////////////////////
+  15          char M531PiccRequestB(unsigned char req_code, 
+  16                                unsigned char AFI, 
+  17                                unsigned char N, 
+  18                                unsigned char *ATQB)
+  19          {
+  20   1          char  status;
+  21   1          struct TranSciveBuffer MfComData;
+  22   1          struct TranSciveBuffer *pi;
+  23   1          pi=&MfComData;
+  24   1      
+  25   1          ClearBitMask(RegControl,0x08);      // disable crypto 1 unit   
+  26   1          
+  27   1         // SetBitMask(RegTxControl,0x03);      // Tx2RF-En, Tx1RF-En enable
+  28   1      
+  29   1          PcdSetTmo(5);
+  30   1          MfComData.MfCommand = PCD_TRANSCEIVE;
+  31   1          MfComData.MfLength  = 3;
+  32   1          MfComData.MfData[0] = ISO14443B_ANTICOLLISION;             // APf code
+  33   1          MfComData.MfData[1] = AFI;                // 
+  34   1          MfComData.MfData[2] = ((req_code<<3)&0x08) | (N&0x07);  // PARAM
+  35   1       
+  36   1          status = PcdComTransceive(pi);
+  37   1      
+  38   1          if (status!=MI_OK && status!=MI_NOTAGERR)
+  39   1          {   status = MI_COLLERR;   }
+  40   1          
+  41   1          if (MfComData.MfLength != 96)
+  42   1          {   status = MI_COM_ERR;   }
+  43   1          
+  44   1          if (status == MI_OK) 
+  45   1          {   
+  46   2              memcpy(ATQB, &MfComData.MfData[0], 16);
+  47   2              PcdSetTmo(ATQB[11]>>4); // set FWT 
+  48   2          }   
+  49   1          return status;
+  50   1      }                      
+  51          
+  52          //////////////////////////////////////////////////////////////////////
+  53          //SLOT-MARKER
+  54          //////////////////////////////////////////////////////////////////////
+  55          /*char M531PiccSlotMarker(unsigned char N, unsigned char *ATQB)
+C51 COMPILER V9.00   ISO14443B                                                             06/20/2013 19:36:44 PAGE 2   
+
+  56          {
+  57              char status;
+  58              struct TranSciveBuffer MfComData;
+  59              struct TranSciveBuffer *pi;
+  60              pi = &MfComData;
+  61          
+  62              PcdSetTmo(5);
+  63          
+  64              if(!N || N>15) status = MI_WRONG_PARAMETER_VALUE;   
+  65              else
+  66              {
+  67                 MfComData.MfCommand=PCD_TRANSCEIVE;
+  68                 MfComData.MfLength=1;
+  69                 MfComData.MfData[0]=0x05|(N<<4); // APn code
+  70                  
+  71                 status=PcdComTransceive(pi);
+  72          
+  73                 if (status == MI_CRCERR) status = MI_COLLERR; // collision occurs
+  74          
+  75                 if (status == MI_OK) 
+  76                 {        
+  77                    memcpy(ATQB, &MfComData.MfData[0], 16);
+  78                    PcdSetTmo(ATQB[11]>>4); // set FWT 
+  79                 }        
+  80              }
+  81              return status;
+  82          }                      
+  83          */
+  84                       
+  85          
+  86          //////////////////////////////////////////////////////////////////////
+  87          //ATTRIB
+  88          //////////////////////////////////////////////////////////////////////
+  89          //char M531PiccAttrib(unsigned char *PUPI,unsigned char PARAM3,unsigned char *answer)
+  90          char M531PiccAttrib(unsigned char *answer)
+  91          {
+  92   1          char  status;
+  93   1          struct TranSciveBuffer MfComData;
+  94   1          struct TranSciveBuffer *pi;
+  95   1          pi = &MfComData;
+  96   1      
+  97   1          MfComData.MfCommand = PCD_TRANSCEIVE;
+  98   1          MfComData.MfLength  = 9;
+  99   1          MfComData.MfData[0] = ISO14443B_ATTRIB;
+ 100   1         // memcpy(&MfComData.MfData[1], PUPI, 4);
+ 101   1              MfComData.MfData[1] = 0x00;
+ 102   1              MfComData.MfData[2] = 0x00;
+ 103   1              MfComData.MfData[3] = 0x00;
+ 104   1              MfComData.MfData[4] = 0x00;
+ 105   1          MfComData.MfData[5] = 0x00;             // EOF/SOF required, default TR0/TR1
+ 106   1          MfComData.MfData[6] = 0x08;//FSDI; // Max frame 64 
+ 107   1          MfComData.MfData[7] = 0x01;//PARAM3;            // Param3, ISO/IEC 14443-4 compliant?
+ 108   1          MfComData.MfData[8] = 0x08;//1;         // CID
+ 109   1          
+ 110   1          status  = PcdComTransceive(pi);
+ 111   1      
+ 112   1          if (status == MI_OK)
+ 113   1          {   
+ 114   2              *answer = MfComData.MfData[0];
+ 115   2          }   
+ 116   1          
+ 117   1          return status;
+C51 COMPILER V9.00   ISO14443B                                                             06/20/2013 19:36:44 PAGE 3   
+
+ 118   1      } 
+ 119          //////////////////////////////////////////////////////////////////////
+ 120          //REQUEST B
+ 121          //////////////////////////////////////////////////////////////////////
+ 122          char Get_UID_TypeB(unsigned char *ATQB1)
+ 123          {
+ 124   1          char  status;
+ 125   1          struct TranSciveBuffer MfComData;
+ 126   1          struct TranSciveBuffer *pi;
+ 127   1          pi=&MfComData;
+ 128   1      
+ 129   1          ClearBitMask(RegControl,0x08);      // disable crypto 1 unit   
+ 130   1          
+ 131   1         // SetBitMask(RegTxControl,0x03);      // Tx2RF-En, Tx1RF-En enable
+ 132   1      
+ 133   1          PcdSetTmo(5);
+ 134   1          MfComData.MfCommand = PCD_TRANSCEIVE;
+ 135   1          MfComData.MfLength  =5;
+ 136   1          MfComData.MfData[0] =0x00; //ISO14443B_ANTICOLLISION;              // APf code
+ 137   1          MfComData.MfData[1] =0x36;// AFI;                // 
+ 138   1          MfComData.MfData[2] =0x00; //((req_code<<3)&0x08) | (N&0x07);  // PARAM
+ 139   1              MfComData.MfData[3] =0x00;
+ 140   1              MfComData.MfData[4] =0x08;
+ 141   1       
+ 142   1          status = PcdComTransceive(pi);
+ 143   1      
+ 144   1       /*  if (status!=MI_OK && status!=MI_NOTAGERR)
+ 145   1          {   status = MI_COLLERR;   }
+ 146   1          
+ 147   1          if (MfComData.MfLength != 96)
+ 148   1          {   status = MI_COM_ERR;   }                                */
+ 149   1          
+ 150   1          if (status == MI_OK) 
+ 151   1          {   
+ 152   2              memcpy(ATQB1, &MfComData.MfData[0], 10);
+ 153   2        //      PcdSetTmo(ATQB[11]>>4); // set FWT 
+ 154   2          }   
+ 155   1          return status;
+ 156   1      }       
+ 157          
+ 158          //////////////////////////////////////////////////////////////////////
+ 159          //HLTB
+ 160          //////////////////////////////////////////////////////////////////////
+ 161          char M531PiccHltb(unsigned char *PUPI)
+ 162          {
+ 163   1          char  status;
+ 164   1          struct TranSciveBuffer MfComData;
+ 165   1          struct TranSciveBuffer *pi;
+ 166   1          pi = &MfComData;
+ 167   1        
+ 168   1          PcdSetTmo(g_cFWI);
+ 169   1                                                                     // disable, ISO/IEC3390 enable   
+ 170   1          MfComData.MfCommand = PCD_TRANSCEIVE;
+ 171   1          MfComData.MfLength  = 2;
+ 172   1          MfComData.MfData[0] = ISO14443B_ATTRIB;
+ 173   1          memcpy(&MfComData.MfData[1], PUPI, 4);
+ 174   1          
+ 175   1          status = PcdComTransceive(pi);
+ 176   1      
+ 177   1          return status;
+ 178   1      }                      
+ 179          
+C51 COMPILER V9.00   ISO14443B                                                             06/20/2013 19:36:44 PAGE 4   
+
+ 180          /////////////////////////////////////////////////////////////////////
+ 181          //AT88RF020验证密码
+ 182          //input:password=8字节密码
+ 183          /////////////////////////////////////////////////////////////////////
+ 184          /*char At88rf020Check(unsigned char *password)
+ 185          {
+ 186              char status;
+ 187              struct TranSciveBuffer MfComData;
+ 188              struct TranSciveBuffer *pi;
+ 189              pi = &MfComData;
+ 190          
+ 191              PcdSetTmo(g_cFWI);
+ 192              MfComData.MfCommand = PCD_TRANSCEIVE;
+ 193              MfComData.MfLength  = 10;
+ 194              MfComData.MfData[0] = AT88RF020_CHECK_PASSWORD|0x10;
+ 195              MfComData.MfData[1] = 0;
+ 196              memcpy(&MfComData.MfData[2], password, 8);   
+ 197          
+ 198              status = PcdComTransceive(pi);
+ 199              
+ 200              if ((MfComData.MfData[1]&0x01) || (MfComData.MfLength!=0x10))
+ 201              {    status = MI_COM_ERR;    }
+ 202              return status;
+ 203          }
+ 204          
+ 205          /////////////////////////////////////////////////////////////////////
+ 206          //读AT88RF020一页数据
+ 207          //input :addr=页地址
+ 208          //output:readdata=读出的8字节数据
+ 209          /////////////////////////////////////////////////////////////////////
+ 210          char At88rf020Read(unsigned char addr, unsigned char *readdata)
+ 211          {
+ 212              char status;
+ 213              struct TranSciveBuffer MfComData;
+ 214              struct TranSciveBuffer *pi;
+ 215              pi = &MfComData;
+ 216              
+ 217              PcdSetTmo(g_cFWI);
+ 218              MfComData.MfCommand = PCD_TRANSCEIVE;
+ 219              MfComData.MfLength  = 10;
+ 220              MfComData.MfData[0] = AT88RF020_READ|0x10;
+ 221              MfComData.MfData[1] = addr;
+ 222              
+ 223              status = PcdComTransceive(pi);
+ 224              
+ 225              if ((status==MI_OK) && (MfComData.MfLength==0x50))
+ 226              {   memcpy(readdata, &MfComData.MfData[2], 8);    }
+ 227              else
+ 228              {   status = MI_COM_ERR;   }
+ 229              
+ 230              return status;
+ 231          }
+ 232          
+ 233          /////////////////////////////////////////////////////////////////////
+ 234          //写AT88RF020一页数据
+ 235          //input :addr=页地址
+ 236          //       writedata=要写入的8字节数据
+ 237          /////////////////////////////////////////////////////////////////////
+ 238          char At88rf020Write(unsigned char addr,unsigned char *writedata)
+ 239          {
+ 240              char status;
+ 241              struct TranSciveBuffer MfComData;
+C51 COMPILER V9.00   ISO14443B                                                             06/20/2013 19:36:44 PAGE 5   
+
+ 242              struct TranSciveBuffer *pi;
+ 243              pi = &MfComData;
+ 244              
+ 245              PcdSetTmo(g_cFWI);
+ 246              MfComData.MfCommand = PCD_TRANSCEIVE;
+ 247              MfComData.MfLength  = 10;
+ 248              MfComData.MfData[0] = AT88RF020_WRITE|0x10;
+ 249              MfComData.MfData[1] = addr;
+ 250              memcpy(&MfComData.MfData[2], writedata, 8);    
+ 251          
+ 252              status = PcdComTransceive(pi);
+ 253              
+ 254              if ((MfComData.MfData[1]&0x01) || (MfComData.MfLength!=0x10))
+ 255              {    status = MI_COM_ERR;    }
+ 256              
+ 257              return status;
+ 258          }
+ 259          /////////////////////////////////////////////////////////////////////
+ 260          //AT88RF020一LOCK
+ 261          //input :lockdata=4字节数据
+ 262          /////////////////////////////////////////////////////////////////////
+ 263          char At88rf020Lock(unsigned char *lockdata)
+ 264          {
+ 265              char status;
+ 266              struct TranSciveBuffer MfComData;
+ 267              struct TranSciveBuffer *pi;
+ 268              pi = &MfComData;
+ 269              
+ 270              PcdSetTmo(g_cFWI);
+ 271              MfComData.MfCommand = PCD_TRANSCEIVE;
+ 272              MfComData.MfLength  = 10;
+ 273              MfComData.MfData[0] = AT88RF020_LOCK|0x10;
+ 274              MfComData.MfData[1] = 0;
+ 275              memcpy(&MfComData.MfData[2], lockdata, 4);    
+ 276          
+ 277              status = PcdComTransceive(pi);
+ 278              
+ 279              if ((MfComData.MfData[1]&0x01) || (MfComData.MfLength!=0x10))
+ 280              {    status = MI_COM_ERR;    }
+ 281              
+ 282              return status;
+ 283          }
+ 284          /////////////////////////////////////////////////////////////////////
+ 285          //AT88RF020计数操作
+ 286          //input :signature = 6字节签名信息
+ 287          /////////////////////////////////////////////////////////////////////
+ 288          char At88rf020Count(unsigned char *signature)
+ 289          {
+ 290              char status;
+ 291              struct TranSciveBuffer MfComData;
+ 292              struct TranSciveBuffer *pi;
+ 293              pi = &MfComData;
+ 294              
+ 295              PcdSetTmo(g_cFWI);
+ 296              MfComData.MfCommand = PCD_TRANSCEIVE;
+ 297              MfComData.MfLength  = 10;
+ 298              MfComData.MfData[0] = AT88RF020_COUNT|0x10;
+ 299              MfComData.MfData[1] = 0;
+ 300              memcpy(&MfComData.MfData[4], signature, 6);
+ 301              
+ 302              status = PcdComTransceive(pi);
+ 303              
+C51 COMPILER V9.00   ISO14443B                                                             06/20/2013 19:36:44 PAGE 6   
+
+ 304              if((MfComData.MfData[1]&0x01) || (MfComData.MfLength!=0x10))
+ 305              {    status = MI_COM_ERR;    }
+ 306              
+ 307              return status;
+ 308          }
+ 309          /////////////////////////////////////////////////////////////////////
+ 310          //AT88RF020进入HALT状态
+ 311          /////////////////////////////////////////////////////////////////////
+ 312          char At88rf020Deselect()
+ 313          {
+ 314              char status;
+ 315              struct TranSciveBuffer MfComData;
+ 316              struct TranSciveBuffer *pi;
+ 317              pi = &MfComData;
+ 318          
+ 319              PcdSetTmo(g_cFWI);
+ 320              MfComData.MfCommand = PCD_TRANSCEIVE;
+ 321              MfComData.MfLength  = 10;
+ 322              MfComData.MfData[0] = AT88RF020_DESELECT|0x10;
+ 323              
+ 324              status = PcdComTransceive(pi);
+ 325              if((MfComData.MfData[1]&0x01) || (MfComData.MfLength!=0x10))
+ 326              {    status = MI_COM_ERR;    }
+ 327              
+ 328              return status;
+ 329          }
+ 330          
+ 331          //////////////////////////////////////////////////////////////////////
+ 332          //激活
+ 333          //////////////////////////////////////////////////////////////////////
+ 334          char SelectSR(unsigned char *Chip_ID)
+ 335          {
+ 336              char  status = MI_OK;
+ 337              struct TranSciveBuffer MfComData;
+ 338              struct TranSciveBuffer *pi;
+ 339              pi = &MfComData;
+ 340          
+ 341              ClearBitMask(RegControl,0x08);         // disable crypto 1 unit   
+ 342              
+ 343              PcdSetTmo(5);
+ 344              MfComData.MfCommand = PCD_TRANSCEIVE;
+ 345              MfComData.MfLength  = 2;
+ 346              MfComData.MfData[0] = 6;                   
+ 347              MfComData.MfData[1] = 0;                
+ 348              
+ 349              status = PcdComTransceive(pi);
+ 350          
+ 351              if (status!=MI_OK && status!=MI_NOTAGERR) 
+ 352              {   status = MI_COLLERR;   }          // collision occurs
+ 353              
+ 354              if(MfComData.MfLength != 8)
+ 355              {   status = MI_COM_ERR;   }
+ 356              
+ 357              if (status == MI_OK)
+ 358              {   
+ 359                   PcdSetTmo(5);
+ 360                   MfComData.MfCommand = PCD_TRANSCEIVE;
+ 361                   MfComData.MfLength  = 2;
+ 362                   MfComData.MfData[1] = MfComData.MfData[0];                    
+ 363                   MfComData.MfData[0] = 0x0E;                 
+ 364                   
+ 365                   status = PcdComTransceive(pi); 
+C51 COMPILER V9.00   ISO14443B                                                             06/20/2013 19:36:44 PAGE 7   
+
+ 366                   
+ 367                   if (status!=MI_OK && status!=MI_NOTAGERR)  // collision occurs
+ 368                   {   status = MI_COLLERR;   }               // collision occurs
+ 369                   if (MfComData.MfLength != 8) 
+ 370                   {   status = MI_COM_ERR;     }
+ 371                   if (status == MI_OK)
+ 372                   {  *Chip_ID = MfComData.MfData[0];  }
+ 373              }   
+ 374              
+ 375              return status;
+ 376          }  
+ 377          
+ 378          //////////////////////////////////////////////////////////////////////
+ 379          //SR176卡读块
+ 380          //////////////////////////////////////////////////////////////////////
+ 381          char ReadSR176(unsigned char addr,unsigned char *readdata)
+ 382          {
+ 383              char status;
+ 384              struct TranSciveBuffer MfComData;
+ 385              struct TranSciveBuffer *pi;
+ 386              pi = &MfComData;
+ 387              
+ 388              PcdSetTmo(5);
+ 389              MfComData.MfCommand = PCD_TRANSCEIVE;
+ 390              MfComData.MfLength  = 2;
+ 391              MfComData.MfData[0] = 8;
+ 392              MfComData.MfData[1] = addr;
+ 393            
+ 394              status = PcdComTransceive(pi);
+ 395            
+ 396              if ((status==MI_OK) && (MfComData.MfLength!=16))
+ 397              {   status = MI_BITCOUNTERR;    }
+ 398              if (status == MI_OK)
+ 399              {
+ 400                  *readdata     = MfComData.MfData[0];
+ 401                  *(readdata+1) = MfComData.MfData[1];
+ 402              }
+ 403              return status;  
+ 404          }  
+ 405          //////////////////////////////////////////////////////////////////////
+ 406          //SR176卡写块
+ 407          //////////////////////////////////////////////////////////////////////
+ 408          char WriteSR176(unsigned char addr,unsigned char *writedata)
+ 409          {
+ 410              char status;
+ 411              struct TranSciveBuffer MfComData;
+ 412              struct TranSciveBuffer *pi;
+ 413              pi = &MfComData;
+ 414          
+ 415              PcdSetTmo(5);
+ 416              MfComData.MfCommand = PCD_TRANSMIT;
+ 417              MfComData.MfLength  = 4;
+ 418              MfComData.MfData[0] = 9;
+ 419              MfComData.MfData[1] = addr;
+ 420              MfComData.MfData[2] = *writedata;
+ 421              MfComData.MfData[3] = *(writedata+1);
+ 422              status = PcdComTransceive(pi);
+ 423              return status;  
+ 424          }      
+ 425          
+ 426          //////////////////////////////////////////////////////////////////////
+ 427          //取SR176卡块锁定状态
+C51 COMPILER V9.00   ISO14443B                                                             06/20/2013 19:36:44 PAGE 8   
+
+ 428          //////////////////////////////////////////////////////////////////////                            
+ 429          char GetProtSR176(unsigned char lockreg)
+ 430          {
+ 431              char status;
+ 432              struct TranSciveBuffer MfComData;
+ 433              struct TranSciveBuffer *pi;
+ 434              pi = &MfComData;
+ 435              PcdSetTmo(5);
+ 436              MfComData.MfCommand = PCD_TRANSMIT;
+ 437              MfComData.MfLength  = 2;
+ 438              MfComData.MfData[0] = 8;
+ 439              MfComData.MfData[1] = 0x0f;
+ 440              status = PcdComTransceive(pi);
+ 441              if (status == MI_OK) { lockreg = MfComData.MfData[1];  }
+ 442              return status;  
+ 443          }       
+ 444          //////////////////////////////////////////////////////////////////////
+ 445          //SR176卡块锁定
+ 446          //////////////////////////////////////////////////////////////////////
+ 447          char ProtectSR176(unsigned char lockreg)
+ 448          {
+ 449              char status;
+ 450              struct TranSciveBuffer MfComData;
+ 451              struct TranSciveBuffer *pi;
+ 452              pi = &MfComData;
+ 453              PcdSetTmo(5);
+ 454              MfComData.MfCommand = PCD_TRANSMIT;
+ 455              MfComData.MfLength  = 4;
+ 456              MfComData.MfData[0] = 9;
+ 457              MfComData.MfData[1] = 0x0F;
+ 458              MfComData.MfData[2] = 0;
+ 459              MfComData.MfData[3] = lockreg;
+ 460              status = PcdComTransceive(pi);
+ 461              return status;  
+ 462          }   
+ 463          
+ 464          //////////////////////////////////////////////////////////////////////
+ 465          //COMPLETION ST
+ 466          //////////////////////////////////////////////////////////////////////
+ 467          char CompletionSR()
+ 468          {
+ 469              char status;
+ 470              struct TranSciveBuffer MfComData;
+ 471              struct TranSciveBuffer *pi;
+ 472              pi = &MfComData;
+ 473              PcdSetTmo(5);
+ 474              MfComData.MfCommand = PCD_TRANSMIT;
+ 475              MfComData.MfLength  = 1;
+ 476              MfComData.MfData[0] = 0x0F;
+ 477              status = PcdComTransceive(pi);
+ 478              return status;  
+ 479          }                                          
+ 480          
+ 481          //////////////////////////////////////////////////////////////////////
+ 482          //SRIX4K卡读块
+ 483          //////////////////////////////////////////////////////////////////////
+ 484          char ReadSR4K(unsigned char addr,unsigned char *readdata)
+ 485          {
+ 486              char status;
+ 487              struct TranSciveBuffer MfComData;
+ 488              struct TranSciveBuffer *pi;
+ 489              pi = &MfComData;
+C51 COMPILER V9.00   ISO14443B                                                             06/20/2013 19:36:44 PAGE 9   
+
+ 490              PcdSetTmo(5);
+ 491              MfComData.MfCommand = PCD_TRANSCEIVE;
+ 492              MfComData.MfLength  = 2;
+ 493              MfComData.MfData[0] = 8;
+ 494              MfComData.MfData[1] = addr;
+ 495              status = PcdComTransceive(pi);
+ 496              if (status!=MI_OK) status = MI_COLLERR; // collision occurs
+ 497              if (MfComData.MfLength!=32) status = MI_COM_ERR;
+ 498              if (status == MI_OK)
+ 499              {
+ 500                  *readdata     = MfComData.MfData[0];
+ 501                  *(readdata+1) = MfComData.MfData[1];
+ 502                  *(readdata+2) = MfComData.MfData[2];
+ 503                  *(readdata+3) = MfComData.MfData[3];
+ 504              }
+ 505              return status;  
+ 506          }
+ 507          
+ 508          //////////////////////////////////////////////////////////////////////
+ 509          //SR176卡写块
+ 510          //////////////////////////////////////////////////////////////////////
+ 511          char WriteSR4K(unsigned char addr,unsigned char *writedata)
+ 512          {
+ 513              char status;
+ 514              struct TranSciveBuffer MfComData;
+ 515              struct TranSciveBuffer *pi;
+ 516              pi = &MfComData;
+ 517              PcdSetTmo(5);
+ 518              MfComData.MfCommand = PCD_TRANSMIT;
+ 519              MfComData.MfLength  = 6;
+ 520              MfComData.MfData[0] = 9;
+ 521              MfComData.MfData[1] = addr;
+ 522              MfComData.MfData[2] = *writedata;
+ 523              MfComData.MfData[3] = *(writedata+1);
+ 524              MfComData.MfData[4] = *(writedata+2);
+ 525              MfComData.MfData[5] = *(writedata+3);
+ 526              status = PcdComTransceive(pi);
+ 527              return status;  
+ 528          } 
+ 529          
+ 530          //////////////////////////////////////////////////////////////////////
+ 531          //SR176卡鉴别
+ 532          //////////////////////////////////////////////////////////////////////
+ 533          char AuthSR4K(unsigned char *rnd,unsigned char *sig)
+ 534          {
+ 535              char status;
+ 536              struct TranSciveBuffer MfComData;
+ 537              struct TranSciveBuffer *pi;
+ 538              pi = &MfComData;
+ 539              PcdSetTmo(9);
+ 540              MfComData.MfCommand = PCD_TRANSCEIVE;
+ 541              MfComData.MfLength  = 7;
+ 542              MfComData.MfData[0] = 0x0A;
+ 543              memcpy(&MfComData.MfData[1], rnd, 6);
+ 544              
+ 545              status = PcdComTransceive(pi);
+ 546              
+ 547              if (status!=MI_OK) status = MI_COLLERR; // collision occurs
+ 548              if (MfComData.MfLength!=24) status=MI_COM_ERR;
+ 549              if (status == MI_OK)
+ 550              {
+ 551                  * sig    = MfComData.MfData[0];
+C51 COMPILER V9.00   ISO14443B                                                             06/20/2013 19:36:44 PAGE 10  
+
+ 552                  *(sig+1) = MfComData.MfData[1];
+ 553                  *(sig+2) = MfComData.MfData[2];
+ 554              }
+ 555              return status;  
+ 556          }  
+ 557          
+ 558          //////////////////////////////////////////////////////////////////////
+ 559          //SR176卡读UID
+ 560          //////////////////////////////////////////////////////////////////////
+ 561          char GetUIDSR4K(unsigned char *UID)
+ 562          {
+ 563              char status;
+ 564              unsigned char i;
+ 565              struct TranSciveBuffer MfComData;
+ 566              struct TranSciveBuffer *pi;
+ 567              pi = &MfComData;
+ 568              
+ 569              PcdSetTmo(5);
+ 570              MfComData.MfCommand = PCD_TRANSCEIVE;
+ 571              MfComData.MfLength  = 1;
+ 572              MfComData.MfData[0] = 0x0B;
+ 573           
+ 574              status = PcdComTransceive(pi);
+ 575          
+ 576              if (MfComData.MfLength!=64) status = MI_COM_ERR;
+ 577              if (status == MI_OK)
+ 578              {
+ 579                  for(i=0;i<8;i++)
+ 580                  {  *(UID+7-i) = MfComData.MfData[i];  }
+ 581              }
+ 582              return status;  
+ 583          }                                         
+ 584          
+ 585          //////////////////////////////////////////////////////////////////////
+ 586          //ISO14443 DESELECT
+ 587          //////////////////////////////////////////////////////////////////////
+ 588          char CL_Deselect(unsigned char CID)
+ 589          {
+ 590              char status;
+ 591              struct TranSciveBuffer MfComData;
+ 592              struct TranSciveBuffer *pi;
+ 593              pi = &MfComData;
+ 594              
+ 595              PcdSetTmo(4);
+ 596              MfComData.MfCommand = PCD_TRANSCEIVE;
+ 597              MfComData.MfLength  = 2;
+ 598              MfComData.MfData[0] = 0xca;
+ 599              MfComData.MfData[1] = CID;
+ 600              status = PcdComTransceive(pi);
+ 601              return status;
+ 602          }
+ 603          
+ 604          */
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    339    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----     294
+   IDATA SIZE       =   ----    ----
+C51 COMPILER V9.00   ISO14443B                                                             06/20/2013 19:36:44 PAGE 11  
+
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

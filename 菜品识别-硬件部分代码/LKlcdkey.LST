@@ -1,0 +1,241 @@
+C51 COMPILER V9.00   LKLCDKEY                                                              06/27/2012 22:20:51 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE LKLCDKEY
+OBJECT MODULE PLACED IN LKlcdkey.OBJ
+COMPILER INVOKED BY: d:\Keil\C51\BIN\C51.EXE LKlcdkey.c ROM(COMPACT) BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include   "AT89X52.H"
+   2          #include <absacc.h>
+   3          #include <string.h>
+   4          #include <intrins.h>
+   5          #include "main.h"
+   6          #include "slrc632.h"
+   7          #include "iso14443a.h"
+   8          #include "iso14443b.h"
+   9          #include "LKlcdkey.h"
+  10          
+  11          
+  12          #define NOP;    _nop_();  _nop_(); _nop_();     _nop_();
+  13          #define SOMENOP;        _nop_();_nop_();_nop_();_nop_();//_nop_();_nop_();_nop_();_nop_();_nop_();_nop_();_nop_()
+             -;_nop_();_nop_();
+  14          #define EXTGRPHFORMT            0X3E
+  15          #define NORGRPHFORMT            0X3A
+  16          #define NORCHARFORMT            0X38
+  17          
+  18          
+  19          
+  20          
+  21          
+  22          void   CheckBusy(void)
+  23          {
+  24   1              LCDRS=0;
+  25   1              BUSY=1;
+  26   1              LCDRW=1;
+  27   1              LCDEN=1;
+  28   1              //while(BUSY);
+  29   1              LCDEN=0;
+  30   1      }
+  31          
+  32          
+  33          
+  34          void WriteIns(unsigned char instru)
+  35          {
+  36   1              //CheckBusy();
+  37   1              LCDRS=0;
+  38   1              NOP;
+  39   1              LCDRW=0;
+  40   1              NOP;
+  41   1              LCDEN=1;
+  42   1              NOP;
+  43   1              P0=instru;
+  44   1              NOP;    
+  45   1              LCDEN=0;
+  46   1              P0=0XFF;
+  47   1              return ;
+  48   1      }       
+  49          
+  50          void   pWriteIns(unsigned char insdat)
+  51          {
+  52   1              CheckBusy();
+  53   1              LCDRS=0;
+  54   1              NOP;
+C51 COMPILER V9.00   LKLCDKEY                                                              06/27/2012 22:20:51 PAGE 2   
+
+  55   1              LCDRW=0;
+  56   1              NOP;
+  57   1              LCDEN=1;
+  58   1              NOP;
+  59   1              P0=insdat;
+  60   1              NOP;
+  61   1              LCDEN=0;
+  62   1              NOP;
+  63   1              P0=0XFF;
+  64   1              return ;
+  65   1      }       
+  66          
+  67          
+  68                  
+  69          void pWriteData(unsigned char cdata)
+  70          {
+  71   1              CheckBusy();
+  72   1              LCDRS=1;
+  73   1              NOP;
+  74   1              LCDRW=0;
+  75   1              NOP;
+  76   1              LCDEN=1;
+  77   1              NOP;
+  78   1              P0=cdata;
+  79   1              NOP;
+  80   1              LCDEN=0;
+  81   1              NOP;
+  82   1              P0=0XFF;
+  83   1              return ;
+  84   1      }       
+  85           /*
+  86          
+  87          void LcdInit(void)
+  88          {
+  89                  
+  90                  WriteIns(NORCHARFORMT);
+  91                  WriteIns(6);
+  92                  cpldog();
+  93                  WriteIns(1);
+  94                  WriteIns(0x0c);
+  95          }       
+  96          
+  97          
+  98          
+  99           
+ 100          void   CheckBusy(void)
+ 101          {
+ 102                  LCDRS=0;
+ 103                  SOMENOP;
+ 104                  BUSY=1;
+ 105                  SOMENOP;
+ 106                  LCDRW=1;
+ 107                  SOMENOP;
+ 108                  LCDEN=1;
+ 109                  SOMENOP;
+ 110                  while(BUSY);
+ 111                  LCDEN=0;
+ 112                  SOMENOP;
+ 113          }
+ 114          
+ 115          
+ 116          void   pWriteIns(unsigned char insdat)
+C51 COMPILER V9.00   LKLCDKEY                                                              06/27/2012 22:20:51 PAGE 3   
+
+ 117          {
+ 118                  //CheckBusy();
+ 119                  LCDEN=1;
+ 120                  SOMENOP;
+ 121                  LCDRS=0;
+ 122                  SOMENOP;
+ 123                  LCDRW=0;
+ 124                  SOMENOP;
+ 125                  P0=insdat;
+ 126                  LCDEN=0;
+ 127                  SOMENOP;
+ 128                  LCDEN=1;
+ 129                  SOMENOP;
+ 130          
+ 131                  P0=0XFF;
+ 132                  return ;
+ 133          }       
+ 134          
+ 135          
+ 136                  
+ 137          void pWriteData(unsigned char cdata)
+ 138          {
+ 139                  //CheckBusy();
+ 140                  LCDEN=1;
+ 141                  SOMENOP;
+ 142                  LCDRS=1;
+ 143                  SOMENOP;
+ 144                  LCDRW=0;
+ 145                  SOMENOP;
+ 146                  P0=cdata;
+ 147                  LCDEN=0;
+ 148                  SOMENOP;
+ 149          
+ 150                  LCDEN=1;
+ 151                  SOMENOP;
+ 152          
+ 153                  P0=0XFF;
+ 154                  return ;
+ 155          }       
+ 156          
+ 157           */
+ 158          
+ 159          void LcdInit(void)
+ 160          { 
+ 161   1              cpldog();
+ 162   1              delay(50);
+ 163   1              WriteIns(0x30);
+ 164   1              delay(6);
+ 165   1              WriteIns(0x30);
+ 166   1              delay(1);
+ 167   1              WriteIns(0x30);
+ 168   1              WriteIns(0x3c);
+ 169   1              WriteIns(0x38);
+ 170   1              WriteIns(1);
+ 171   1              WriteIns(2);
+ 172   1              //WriteIns(0x0c);
+ 173   1      
+ 174   1      
+ 175   1      }       
+ 176          
+ 177          
+ 178          
+C51 COMPILER V9.00   LKLCDKEY                                                              06/27/2012 22:20:51 PAGE 4   
+
+ 179          
+ 180          void  DispHZ(unsigned char addr,unsigned char *buf,unsigned char lenofh_word)
+ 181          {
+ 182   1              unsigned char *pc=buf;
+ 183   1              unsigned char ii=lenofh_word;
+ 184   1              if(ii>15) ii=15;
+ 185   1              pWriteIns(addr);
+ 186   1              while(ii--)     pWriteData(*pc++);      
+ 187   1      }
+ 188          
+ 189          
+ 190          void DispClrLine(unsigned char linenb)
+ 191          {
+ 192   1              unsigned char ii=15;
+ 193   1              pWriteIns(0x80+linenb*0x10);
+ 194   1              while(ii--)     pWriteData(' ');        
+ 195   1      }
+ 196          
+ 197          void DispLine(unsigned char *line1,unsigned char *line2)
+ 198          {
+ 199   1           DispClrLine(0);
+ 200   1               DispHZ(0x80,line1,15);
+ 201   1               DispClrLine(1);
+ 202   1               DispHZ(0x90,line2,15);
+ 203   1               
+ 204   1      }
+ 205          
+ 206          void DispLogo(void)
+ 207          {
+ 208   1         DispHZ(0x80,"直接读卡显示  ",15);    //{"    诚义电子   "};
+ 209   1      }
+ 210          
+ 211          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    294    ----
+   CONSTANT SIZE    =     15    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      14
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

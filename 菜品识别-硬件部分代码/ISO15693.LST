@@ -1,0 +1,227 @@
+C51 COMPILER V9.52.0.0   ISO15693                                                          05/27/2017 16:27:45 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE ISO15693
+OBJECT MODULE PLACED IN ISO15693.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE ISO15693.C ROM(COMPACT) BROWSE DEBUG OBJECTEXTEND TABS(2)
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include <string.h>
+   3          #include "main.h"
+   4          #include "slrc632.h"
+   5          #include "iso15693.h" 
+   6          
+   7          
+   8          extern struct TranSciveBuffer{unsigned char MfCommand;
+   9                                        unsigned int  MfLength;
+  10                                        unsigned char MfData[64];
+  11                                       };
+  12          
+  13          //ËùÓÐº¯ÊýµÄ²ÎÊý²Î¼ûISO15693-3/10.3
+  14          //·µ»ØÊý¾ÝÔÚ´æÈërespÊ±È¥µôÁËflag×Ö½Ú
+  15          //µ±¸ÄÐ´¿¨Æ¬ÉÏÊý¾ÝÊ±£¨write or lock)Èç²Ù×÷µÄÊÇTI¿¨Æ¬ÉèflagsµÄbit6 Option_flag = 1£¬Èç²Ù×÷µÄÊÇI.CODE SLI¿¨Æ
+  16          
+  17          char ISO15693_Inventory (unsigned char flags,
+  18                                   unsigned char AFI, 
+  19                                   unsigned char masklengh, 
+  20                                   unsigned char *uid, 
+  21                                   unsigned char *resp)
+  22          {
+  23   1          unsigned char SndCNT, cnt, status;
+  24   1          struct TranSciveBuffer MfComData;
+  25   1          struct TranSciveBuffer *pi;
+  26   1          pi = &MfComData;
+  27   1              
+  28   1          ClearBitMask(RegCoderControl, 0x80);
+  29   1                  
+  30   1          MfComData.MfCommand = PCD_TRANSCEIVE; 
+  31   1          MfComData.MfData[0] = flags;
+  32   1          MfComData.MfData[1] = ISO15693_INVENTORY;
+  33   1          SndCNT = 2;
+  34   1          if (flags & 0x10)
+  35   1          {
+  36   2              MfComData.MfData[SndCNT] = AFI;   
+  37   2              SndCNT++;
+  38   2          }
+  39   1          MfComData.MfData[SndCNT] = masklengh;
+  40   1          SndCNT++;
+  41   1          if (masklengh%8)
+  42   1          {    cnt = masklengh/8 + 1;    }
+  43   1          else
+  44   1          {    cnt = masklengh/8;        }
+  45   1          if (cnt)
+  46   1          {    memcpy(&MfComData.MfData[SndCNT], uid, cnt);    }
+  47   1          MfComData.MfLength  = cnt + SndCNT;
+  48   1      
+  49   1          status = ISO15693_Transceive(pi);
+  50   1         
+  51   1          if (status == MI_OK)
+  52   1          {
+  53   2              if (MfComData.MfLength != 0x50)
+  54   2              {    status = MI_BITCOUNTERR;    }
+  55   2              else
+C51 COMPILER V9.52.0.0   ISO15693                                                          05/27/2017 16:27:45 PAGE 2   
+
+  56   2              {    memcpy(resp, &MfComData.MfData[1], 9);    }
+  57   2          }     
+  58   1          return status;
+  59   1      }
+  60          
+  61          /////////////////////////////////////////////////////////////////////
+  62          //ISO15693 INVENTORY_16
+  63          /////////////////////////////////////////////////////////////////////                           
+  64          char ISO15693_Inventory16(unsigned char flags,
+  65                                    unsigned char AFI, 
+  66                                    unsigned char masklengh, 
+  67                                    unsigned char *uid, 
+  68                                    unsigned char *resplen, 
+  69                                    unsigned char *resp)
+  70          {
+  71   1          unsigned char idata SndCNT, cnt, status, status1, i,j;
+  72   1          struct TranSciveBuffer MfComData;
+  73   1          struct TranSciveBuffer *pi;
+  74   1          unsigned int xdata timecount=0;
+  75   1      //    unsigned char vRet;
+  76   1          pi = &MfComData;
+  77   1          status = MI_COM_ERR;
+  78   1          *resplen = 0;
+  79   1          SetBitMask(RegChannelRedundancy, 0x04);   
+  80   1          ClearBitMask(RegCoderControl, 0x80);
+  81   1          
+  82   1                      
+  83   1          MfComData.MfCommand = PCD_TRANSMIT; 
+  84   1          MfComData.MfData[0] = flags;
+  85   1          MfComData.MfData[1] = ISO15693_INVENTORY;
+  86   1          SndCNT = 2;
+  87   1          if (flags & 0x10)
+  88   1          {
+  89   2              MfComData.MfData[SndCNT] = AFI;   
+  90   2              SndCNT++;
+  91   2          }
+  92   1          MfComData.MfData[SndCNT] = masklengh;
+  93   1          SndCNT++;
+  94   1          if (masklengh%8)
+  95   1          {    cnt = masklengh/8 + 1;    }
+  96   1          else
+  97   1          {    cnt = masklengh/8;        }
+  98   1          if (cnt)
+  99   1          {   
+ 100   2             memcpy(&MfComData.MfData[SndCNT], uid, cnt);  
+ 101   2          }
+ 102   1          MfComData.MfLength  = cnt + SndCNT;
+ 103   1      
+ 104   1          status1 = ISO15693_Transceive(pi);
+ 105   1        
+ 106   1      
+ 107   1          j = 0;
+ 108   1          for (i=0; i<16; i++)
+ 109   1          {
+ 110   2               pi = &MfComData;
+ 111   2               ClearBitMask(RegChannelRedundancy, 0x04);
+ 112   2               SetBitMask(RegCoderControl, 0x80);
+ 113   2               SetBitMask(RegTxControl, 0x10);
+ 114   2               MfComData.MfCommand = PCD_TRANSCEIVE;
+ 115   2               MfComData.MfLength = 0;
+ 116   2      
+ 117   2               status1 = ISO15693_Transceive( pi );  
+C51 COMPILER V9.52.0.0   ISO15693                                                          05/27/2017 16:27:45 PAGE 3   
+
+ 118   2      
+ 119   2      
+ 120   2               if ((status1 == MI_OK) && (MfComData.MfLength == 0x50))
+ 121   2               {
+ 122   3                // vRet = Save_UID(&MfComData.MfData[2]);
+ 123   3      //           if(vRet ==0)
+ 124   3      //           {
+ 125   3      //             status = MI_OK;
+ 126   3      //           }
+ 127   3                 //if(*resplen>24)
+ 128   3                 {
+ 129   4                   status = MI_OK;
+ 130   4                 }
+ 131   3                 
+ 132   3                 *resplen += 9;
+ 133   3                 memcpy(resp+9*j, &MfComData.MfData[1], 9); 
+ 134   3                 j++;            
+ 135   3               }
+ 136   2               if (*resplen >= 36)
+ 137   2               {   break;    }
+ 138   2        }
+ 139   1      
+ 140   1        
+ 141   1      
+ 142   1        return status;
+ 143   1      }
+ 144          
+ 145          
+ 146          /////////////////////////////////////////////////////////////////////
+ 147          //ISO15693_READ Single/Multiple Block(s)
+ 148          /////////////////////////////////////////////////////////////////////
+ 149          /*char ISO15693_Read_sm (unsigned char flags, 
+ 150                                 unsigned char *uid, 
+ 151                                 unsigned char blnr, 
+ 152                                 unsigned char nbl, 
+ 153                                 unsigned char *resplen, 
+ 154                                 unsigned char *resp)
+ 155          {
+ 156              unsigned char idata cnt, status;
+ 157              struct TranSciveBuffer MfComData;
+ 158              struct TranSciveBuffer *pi;
+ 159              pi = &MfComData;
+ 160              *resplen = 0;
+ 161                  
+ 162              ClearBitMask(RegCoderControl, 0x80);
+ 163                  
+ 164              if(nbl)
+ 165              {    nbl--; }
+ 166              MfComData.MfCommand = PCD_TRANSCEIVE;
+ 167              MfComData.MfData[0] = flags;
+ 168              if (nbl)
+ 169              {    MfComData.MfData[1] = ISO15693_READ_MULTIPLE_BLOCKS;    }
+ 170              else
+ 171              {    MfComData.MfData[1] = ISO15693_READ_SINGLE_BLOCK;       }
+ 172              cnt = 2;
+ 173              if ((flags & 0x20) && !(flags & 0x10)) // flags & 0x20 - Addressflag 
+ 174                     // request flags & 0x10 - Selectflag request
+ 175              {
+ 176                  memcpy (&MfComData.MfData[cnt], uid, 8);
+ 177                  cnt = cnt + 8;
+ 178              }
+ 179              MfComData.MfData[cnt] = blnr;
+C51 COMPILER V9.52.0.0   ISO15693                                                          05/27/2017 16:27:45 PAGE 4   
+
+ 180              if (nbl)
+ 181              {
+ 182                  cnt++;
+ 183                  MfComData.MfData[cnt] = nbl;
+ 184              }
+ 185          
+ 186              MfComData.MfLength = cnt + 1;
+ 187          
+ 188              status = ISO15693_Transceive( pi );
+ 189            
+ 190              if (status == MI_OK)
+ 191              {
+ 192                  *resplen = MfComData.MfLength/8 - 1;
+ 193                  memcpy(resp, &MfComData.MfData[1], *resplen);
+ 194              }
+ 195              return status;
+ 196          }*/
+ 197          
+ 198          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    482    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----       2
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----     164
+   IDATA SIZE       =   ----       6
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

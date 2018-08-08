@@ -1,0 +1,6 @@
+"MAIN.obj",
+"SlRc632.obj",
+"LCD1602.obj",
+"ISO15693.obj" 
+TO "SL601F" 
+RAMSIZE(256) 
