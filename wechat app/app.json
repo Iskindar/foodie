@@ -1,0 +1,51 @@
+{
+  "pages": [
+    "pages/find/find",
+    "pages/find/rest-inquiry/rest-inquiry",
+    "pages/find/analysis/analysis",
+    "pages/forum/forum",
+    "pages/user/user",
+    "pages/user/feedback/feedback",
+    "pages/user/about/about",
+    "pages/forum/add/add",
+    "pages/user/personalInfo/personalInfo",
+    "pages/find/discount-post/discount-post",
+    "pages/find/report/report",
+    "pages/find/recommend/recommend",
+    "pages/find/stop/stop",
+    "pages/user/bracelet/bracelet",
+    "pages/user/health-report/health-report",
+    "pages/find/report/report-detail/report-detail",
+    "pages/find/recommend/survey/survey"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#e0620d",
+    "navigationBarTitleText": "WeChat",
+    "navigationBarTextStyle": "black"
+  },
+  "navigationBarTextStyle": "white",
+  "tabBar": {
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/find/find",
+        "text": "首页",
+        "iconPath": "images/icon/homepage.png",
+        "selectedIconPath": "images/icon/homepage_hl.png"
+      },
+      {
+        "pagePath": "pages/forum/forum",
+        "text": "发现",
+        "iconPath": "images/icon/subscription.png",
+        "selectedIconPath": "images/icon/subscription_hl.png"
+      },
+      {
+        "pagePath": "pages/user/user",
+        "text": "个人中心",
+        "iconPath": "images/icon/character.png",
+        "selectedIconPath": "images/icon/character_hl.png"
+      }
+    ]
+  }
+}
